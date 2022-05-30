@@ -10,19 +10,19 @@ class Cart extends React.Component {
           title: 'Phone',
           price: 9999,
           qty: 2,
-          img: '',
+          img: 'https://fdn2.gsmarena.com/vv/pics/apple/apple-iphone-x-new-1.jpg',
         },
         {
           title: 'Watch',
           price: 999,
           qty: 3,
-          img: '',
+          img: 'https://staticimg.titan.co.in/Titan/Catalog/1825KM01_1.jpg?pView=pdp',
         },
         {
           title: 'Laptop',
           price: 25000,
           qty: 1,
-          img: '',
+          img: 'https://consumer-img.huawei.com/content/dam/huawei-cbg-site/common/mkt/pdp/pc/matebook-x-pro-2021/imgs/huawei-matebook-x-pro-2021-kv01.png',
         },
       ],
     };

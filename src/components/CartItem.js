@@ -1,15 +1,11 @@
 import React from 'react';
 class CartItem extends React.Component {
   render() {
-    const { title, price, qty } = this.props.product;
+    const { title, price, qty, img } = this.props.product;
     return (
       <div className='cart-item'>
         <div className='left-block'>
-          <img
-            src='https://fdn2.gsmarena.com/vv/pics/apple/apple-iphone-x-new-1.jpg'
-            style={styles.image}
-            alt='img'
-          />
+          <img src={img} style={styles.image} alt='img' />
         </div>
         <div className='right-block'>
           <div style={styles.font}>{title}</div>
