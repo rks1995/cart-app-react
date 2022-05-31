@@ -1,6 +1,7 @@
 import React from 'react';
 import Navbar from './components/Navbar';
 import Cart from './components/Cart';
+import Footer from './components/Footer';
 
 class App extends React.Component {
   constructor() {
@@ -59,6 +60,19 @@ class App extends React.Component {
 
     this.setState({ products: newProduct });
   };
+
+  getTotalPrice = () => {
+    const { products } = this.state;
+
+    let totalPrice = 0;
+
+    products.forEach((product) => {
+      const { price, qty } = product;
+      totalPrice += price * qty;
+    });
+
+    return totalPrice;
+  };
   render() {
     const { products } = this.state;
     return (
@@ -70,6 +84,7 @@ class App extends React.Component {
           HandleIncreaseQuantity={this.HandleIncreaseQuantity}
           HandleDelete={this.HandleDelete}
         />
+        <Footer getTotalPrice={this.getTotalPrice} />
       </div>
     );
   }
