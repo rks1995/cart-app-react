@@ -2,32 +2,31 @@ import React from 'react';
 import Navbar from './components/Navbar';
 import Cart from './components/Cart';
 import Footer from './components/Footer';
+import { collection, getDocs } from 'firebase/firestore/lite';
+import db from './firebase/config';
 
 class App extends React.Component {
   constructor() {
     super();
     this.state = {
-      products: [
-        {
-          title: 'Phone',
-          price: 9999,
-          qty: 2,
-          img: 'https://fdn2.gsmarena.com/vv/pics/apple/apple-iphone-x-new-1.jpg',
-        },
-        {
-          title: 'Watch',
-          price: 999,
-          qty: 3,
-          img: 'https://staticimg.titan.co.in/Titan/Catalog/1825KM01_1.jpg?pView=pdp',
-        },
-        {
-          title: 'Laptop',
-          price: 25000,
-          qty: 1,
-          img: 'https://consumer-img.huawei.com/content/dam/huawei-cbg-site/common/mkt/pdp/pc/matebook-x-pro-2021/imgs/huawei-matebook-x-pro-2021-kv01.png',
-        },
-      ],
+      loading: true,
+      products: [],
     };
+  }
+
+  // Get a list of products from your database
+  getProducts = async (db) => {
+    const productsCol = collection(db, 'products');
+    const productsSnapshot = await getDocs(productsCol);
+    const promise = productsSnapshot.docs.map((doc) => doc.data());
+    return promise;
+  };
+
+  async componentDidMount() {
+    let productList = await this.getProducts(db);
+    this.setState({ products: productList, loading: false });
+
+    // this.setState({ products });
   }
 
   HandleIncreaseQuantity = (product) => {
@@ -74,16 +73,18 @@ class App extends React.Component {
     return totalPrice;
   };
   render() {
-    const { products } = this.state;
+    const { products, loading } = this.state;
     return (
       <div className='App'>
         <Navbar products={products} />
+
         <Cart
           products={products}
           HandleDecreaseQuantity={this.HandleDecreaseQuantity}
           HandleIncreaseQuantity={this.HandleIncreaseQuantity}
           HandleDelete={this.HandleDelete}
         />
+        {loading && <h1>Loading Products...</h1>}
         <Footer getTotalPrice={this.getTotalPrice} />
       </div>
     );
