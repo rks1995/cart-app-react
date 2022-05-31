@@ -15,11 +15,18 @@ code {
 .cart {
   display: flex;
   flex-direction: column;
+  width: 50%;
+  margin: 20px auto;
+  
 }
 
 .cart-item {
   display: inline-flex;
-  margin: 20px 10px;
+  margin: 10px 10px;
+  padding: 10px 0;
+  justify-content: space-around;
+  align-items: center;
+  background-color: #3BACB6;
 }
 
 .cart-item .right-block {
@@ -38,4 +45,29 @@ code {
 
 .action-icons:hover {
   cursor: pointer;
+}
+
+/* navbar */
+
+.navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #6A67CE;
+}
+
+.cart-img {
+  width: 50px;
+  position: relative;
+}
+
+.cart-item-count {
+  background-color: yellow;
+  position: absolute;
+  top: 15px;
+  right: 10px;
+  padding: 5px 10px;
+  border-radius: 50%;
+
 }
