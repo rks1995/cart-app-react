@@ -57,37 +57,38 @@ class App extends React.Component {
     }
   };
 
-  // ================== updating product into the firebase store ================= //
-  updateProduct = async () => {};
+  // ================== Handle Increase Quantity (update) ================= //
+  HandleIncreaseQuantity = async (product) => {
+    const { products } = this.state;
+
+    const index = products.indexOf(product);
+
+    const docRef = doc(db, 'products', products[index].id);
+
+    await updateDoc(docRef, {
+      qty: products[index].qty + 1,
+    });
+  };
+
+  // ================== Handle Decrease Quantity (update) ================= //
+  HandleDecreaseQuantity = async (product) => {
+    const { products } = this.state;
+
+    const index = products.indexOf(product);
+    if (products[index].qty === 0) return;
+
+    const docRef = doc(db, 'products', products[index].id);
+
+    await updateDoc(docRef, {
+      qty: products[index].qty - 1,
+    });
+  };
 
   // ================== Deleting product from firebase ================= //
   HandleDelete = async (product) => {
     const productId = product.id;
     console.log(productId);
     await deleteDoc(doc(db, 'products', productId));
-  };
-
-  // ================== Handle Increase Quantity ================= //
-  HandleIncreaseQuantity = (product) => {
-    const { products } = this.state;
-
-    const index = products.indexOf(product);
-    products[index].qty += 1;
-    this.setState({
-      products: products,
-    });
-  };
-
-  // ================== Handle Decrease Quantity ================= //
-  HandleDecreaseQuantity = (product) => {
-    const { products } = this.state;
-
-    const index = products.indexOf(product);
-    if (products[index].qty === 0) return;
-    products[index].qty -= 1;
-    this.setState({
-      products: products,
-    });
   };
 
   // ================== get total price of the products ================= //
