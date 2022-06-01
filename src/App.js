@@ -2,7 +2,14 @@ import React from 'react';
 import Navbar from './components/Navbar';
 import Cart from './components/Cart';
 import Footer from './components/Footer';
-import { collection, onSnapshot } from 'firebase/firestore';
+import {
+  collection,
+  onSnapshot,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  doc,
+} from 'firebase/firestore';
 
 import db from './firebase/config';
 
@@ -18,7 +25,7 @@ class App extends React.Component {
   componentDidMount() {
     // Get a list of products from your database
     const getProducts = async (db) => {
-      //getting productList using getDocs
+      // reading data just once
       // const productsCol = collection(db, 'products');
       // const productsSnapshot = await getDocs(productsCol);
       // const productList = productsSnapshot.docs.map((doc) => {
@@ -32,12 +39,35 @@ class App extends React.Component {
         });
         this.setState({ products: products, loading: false });
       });
-      console.log(unSub);
-      // this.setState({ products: productList, loading: false });
     };
     getProducts(db);
   }
 
+  // ================== Adding product into the firebase store ================= //
+  addProduct = async () => {
+    try {
+      const docRef = await addDoc(collection(db, 'products'), {
+        title: 'Fridge',
+        qty: 1,
+        price: 1999,
+        img: '',
+      });
+    } catch (error) {
+      console.log('Error in adding product', error);
+    }
+  };
+
+  // ================== updating product into the firebase store ================= //
+  updateProduct = async () => {};
+
+  // ================== Deleting product from firebase ================= //
+  HandleDelete = async (product) => {
+    const productId = product.id;
+    console.log(productId);
+    await deleteDoc(doc(db, 'products', productId));
+  };
+
+  // ================== Handle Increase Quantity ================= //
   HandleIncreaseQuantity = (product) => {
     const { products } = this.state;
 
@@ -48,6 +78,7 @@ class App extends React.Component {
     });
   };
 
+  // ================== Handle Decrease Quantity ================= //
   HandleDecreaseQuantity = (product) => {
     const { products } = this.state;
 
@@ -59,16 +90,7 @@ class App extends React.Component {
     });
   };
 
-  HandleDelete = (product) => {
-    const { products } = this.state;
-
-    const newProduct = products.filter((item) => {
-      return item !== product;
-    });
-
-    this.setState({ products: newProduct });
-  };
-
+  // ================== get total price of the products ================= //
   getTotalPrice = () => {
     const { products } = this.state;
 
@@ -81,12 +103,13 @@ class App extends React.Component {
 
     return totalPrice;
   };
+
   render() {
     const { products, loading } = this.state;
     return (
       <div className='App'>
         <Navbar products={products} />
-
+        <button onClick={this.addProduct}>Add a product</button>
         <Cart
           products={products}
           HandleDecreaseQuantity={this.HandleDecreaseQuantity}
