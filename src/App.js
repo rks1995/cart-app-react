@@ -2,7 +2,8 @@ import React from 'react';
 import Navbar from './components/Navbar';
 import Cart from './components/Cart';
 import Footer from './components/Footer';
-import { collection, getDocs } from 'firebase/firestore/lite';
+import { collection, onSnapshot } from 'firebase/firestore';
+
 import db from './firebase/config';
 
 class App extends React.Component {
@@ -14,19 +15,27 @@ class App extends React.Component {
     };
   }
 
-  // Get a list of products from your database
-  getProducts = async (db) => {
-    const productsCol = collection(db, 'products');
-    const productsSnapshot = await getDocs(productsCol);
-    const promise = productsSnapshot.docs.map((doc) => doc.data());
-    return promise;
-  };
+  componentDidMount() {
+    // Get a list of products from your database
+    const getProducts = async (db) => {
+      //getting productList using getDocs
+      // const productsCol = collection(db, 'products');
+      // const productsSnapshot = await getDocs(productsCol);
+      // const productList = productsSnapshot.docs.map((doc) => {
+      //   return { ...doc.data(), id: doc.id };
+      // });
 
-  async componentDidMount() {
-    let productList = await this.getProducts(db);
-    this.setState({ products: productList, loading: false });
-
-    // this.setState({ products });
+      //onSnapshot is used for realtime update-> if any changes reflects in firestore, it immediately reflects the change
+      const unSub = onSnapshot(collection(db, 'products'), (snapshot) => {
+        let products = snapshot.docs.map((doc) => {
+          return { ...doc.data(), id: doc.id };
+        });
+        this.setState({ products: products, loading: false });
+      });
+      console.log(unSub);
+      // this.setState({ products: productList, loading: false });
+    };
+    getProducts(db);
   }
 
   HandleIncreaseQuantity = (product) => {
