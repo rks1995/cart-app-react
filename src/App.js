@@ -9,6 +9,10 @@ import {
   updateDoc,
   deleteDoc,
   doc,
+  where,
+  query,
+  orderBy,
+  limit,
 } from 'firebase/firestore';
 
 import db from './firebase/config';
@@ -33,7 +37,15 @@ class App extends React.Component {
       // });
 
       //onSnapshot is used for realtime update-> if any changes reflects in firestore, it immediately reflects the change
-      const unSub = onSnapshot(collection(db, 'products'), (snapshot) => {
+      const docRef = collection(db, 'products');
+      // const q = query(docRef, where('price', '==', 699));
+      const q = query(
+        docRef,
+        where('price', '>=', 99),
+        orderBy('price'),
+        limit(3)
+      );
+      const unsub = onSnapshot(q, (snapshot) => {
         let products = snapshot.docs.map((doc) => {
           return { ...doc.data(), id: doc.id };
         });
@@ -52,6 +64,7 @@ class App extends React.Component {
         price: 1999,
         img: '',
       });
+      console.log('document added successfully with ref: ', docRef);
     } catch (error) {
       console.log('Error in adding product', error);
     }
