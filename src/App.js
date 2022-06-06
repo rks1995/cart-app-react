@@ -41,7 +41,7 @@ class App extends React.Component {
       // const q = query(docRef, where('price', '==', 699));
       const q = query(
         docRef,
-        where('price', '>=', 99),
+        where('price', '!=', 99),
         orderBy('price'),
         limit(3)
       );
